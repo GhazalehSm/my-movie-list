@@ -1,7 +1,15 @@
-import { useState } from "react";
+import { useRef } from "react";
+import { useKeyEvent } from "./hooks/useKeyEvent";
 
-export default function NavBar({ movies }) {
-  const [query, setQuery] = useState("");
+export default function NavBar({ movies, query, setQuery }) {
+  const searchRef = useRef(null);
+
+  useKeyEvent("Enter", function () {
+    if (document.activeElement === searchRef.current) return;
+    searchRef.current.focus();
+    setQuery("");
+  });
+
   return (
     <nav className="nav-bar">
       <div className="logo">
@@ -9,6 +17,7 @@ export default function NavBar({ movies }) {
         <h1>Bring Popcorn</h1>
       </div>
       <input
+        ref={searchRef}
         className="search"
         type="text"
         placeholder="Search movies..."
